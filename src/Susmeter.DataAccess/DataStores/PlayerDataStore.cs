@@ -34,7 +34,7 @@ namespace Susmeter.DataAccess.DataStores
 
         public async Task<PlayerEntity> AddPlayerAsync(string name, string nickname, Color color, CancellationToken cancellationToken)
         {
-            var colorEntity = await Context.FindColorAsync(color, cancellationToken);
+            var colorEntity = await Context.FindEntityAsync<ColorEntity>(color.HexValue(), cancellationToken);
             var entity = new PlayerEntity { Name = name, Nickname = nickname, AvatarColor = colorEntity };
             await Context.AddAsync(entity, cancellationToken);
 
@@ -45,6 +45,7 @@ namespace Susmeter.DataAccess.DataStores
         {
             return await Context.Set<PlayerEntity>()
                 .ProjectTo<Player>(Mapper)
+                .OrderBy(i => i.Nickname)
                 .ToListAsync(cancellationToken);
         }
 
@@ -52,17 +53,14 @@ namespace Susmeter.DataAccess.DataStores
         {
             return await Context.Set<PlayerEntity>()
                 .Where(i => i.PlayerId == playerId)
-                .Select(i => new Player
-                {
-                    PlayerId = i.PlayerId
-                })
+                .ProjectTo<Player>(Mapper)
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task UpdatePlayerAsync(Player player, CancellationToken cancellationToken)
         {
-            var entity = await Context.Set<PlayerEntity>().FindAsync(player.PlayerId, cancellationToken);
-            var colorEntity = await Context.FindColorAsync(player.AvatarColor, cancellationToken);
+            var entity = await Context.FindEntityAsync<PlayerEntity>(player.PlayerId, cancellationToken);
+            var colorEntity = await Context.FindEntityAsync<ColorEntity>(player.AvatarHexColor, cancellationToken);
 
             entity.Name = player.Name;
             entity.Nickname = player.Nickname;

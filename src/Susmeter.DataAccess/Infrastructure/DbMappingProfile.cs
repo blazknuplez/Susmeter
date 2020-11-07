@@ -17,7 +17,7 @@ namespace Susmeter.DataAccess.Infrastructure
                 .ForMember(d => d.PlayerId, f => f.MapFrom(s => s.PlayerId))
                 .ForMember(d => d.Name, f => f.MapFrom(s => s.Player.Name))
                 .ForMember(d => d.Nickname, f => f.MapFrom(s => s.Player.Nickname))
-                .ForMember(d => d.AvatarColor, f => f.MapFrom(s => s.Player.AvatarHexColor));
+                .ForMember(d => d.AvatarHexColor, f => f.MapFrom(s => s.Player.AvatarHexColor));
         }
     }
 }

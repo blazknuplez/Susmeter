@@ -54,7 +54,7 @@ namespace Susmeter.DataAccess.DataStores
         private async Task AddPlayerToMatch(MatchEntity entity, MatchPlayer player, CancellationToken cancellationToken)
         {
             var playerEntity = await Context.Set<PlayerEntity>().FindAsync(player.PlayerId, cancellationToken);
-            var colorEntity = await Context.FindColorAsync(player.HexColor, cancellationToken);
+            var colorEntity = await Context.FindEntityAsync<ColorEntity>(player.HexColor, cancellationToken);
 
             entity.Players.Add(new MatchPlayerEntity
             {

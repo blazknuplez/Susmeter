@@ -9,8 +9,8 @@ using Susmeter.Ef;
 namespace Susmeter.Ef.Migrations
 {
     [DbContext(typeof(SusmeterDbContext))]
-    [Migration("20201107155715_Create")]
-    partial class Create
+    [Migration("20201107202943_CreateDb")]
+    partial class CreateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -176,6 +176,62 @@ namespace Susmeter.Ef.Migrations
                             AvatarHexColor = "#ED54BA",
                             Name = "Lara",
                             Nickname = "Meronja"
+                        },
+                        new
+                        {
+                            PlayerId = 3L,
+                            AvatarHexColor = "#50EF39",
+                            Name = "Tancer",
+                            Nickname = "c00kie"
+                        },
+                        new
+                        {
+                            PlayerId = 4L,
+                            AvatarHexColor = "#71491E",
+                            Name = "Roki",
+                            Nickname = "thefk69"
+                        },
+                        new
+                        {
+                            PlayerId = 5L,
+                            AvatarHexColor = "#3F474E",
+                            Name = "Kevin",
+                            Nickname = "Krušni oče"
+                        },
+                        new
+                        {
+                            PlayerId = 6L,
+                            AvatarHexColor = "#D6E0F0",
+                            Name = "Eagle",
+                            Nickname = "Eagle"
+                        },
+                        new
+                        {
+                            PlayerId = 7L,
+                            AvatarHexColor = "#132ED1",
+                            Name = "Dani",
+                            Nickname = "Bani"
+                        },
+                        new
+                        {
+                            PlayerId = 8L,
+                            AvatarHexColor = "#38FEDB",
+                            Name = "Valerija",
+                            Nickname = "Val"
+                        },
+                        new
+                        {
+                            PlayerId = 9L,
+                            AvatarHexColor = "#117F2D",
+                            Name = "Jure",
+                            Nickname = "Jure"
+                        },
+                        new
+                        {
+                            PlayerId = 10L,
+                            AvatarHexColor = "#6B31BC",
+                            Name = "Arijan",
+                            Nickname = "Archie"
                         });
                 });
 

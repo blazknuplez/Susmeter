@@ -8,6 +8,6 @@
 
         public string Nickname { get; set; }
 
-        public string AvatarColor { get; set; }
+        public string AvatarHexColor { get; set; }
     }
 }

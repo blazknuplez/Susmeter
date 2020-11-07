@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Susmeter.Ef.Migrations
 {
-    public partial class Create : Migration
+    public partial class CreateDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -146,12 +146,52 @@ namespace Susmeter.Ef.Migrations
             migrationBuilder.InsertData(
                 table: "Player",
                 columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 7L, "#132ED1", "Dani", "Bani" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 9L, "#117F2D", "Jure", "Jure" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
                 values: new object[] { 2L, "#ED54BA", "Lara", "Meronja" });
 
             migrationBuilder.InsertData(
                 table: "Player",
                 columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
                 values: new object[] { 1L, "#F6F658", "Blaž", "not knupli" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 5L, "#3F474E", "Kevin", "Krušni oče" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 6L, "#D6E0F0", "Eagle", "Eagle" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 10L, "#6B31BC", "Arijan", "Archie" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 4L, "#71491E", "Roki", "thefk69" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 8L, "#38FEDB", "Valerija", "Val" });
+
+            migrationBuilder.InsertData(
+                table: "Player",
+                columns: new[] { "PlayerId", "AvatarHexColor", "Name", "Nickname" },
+                values: new object[] { 3L, "#50EF39", "Tancer", "c00kie" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_MatchPlayer_HexColor",

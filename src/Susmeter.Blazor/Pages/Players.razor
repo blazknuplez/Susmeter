@@ -3,23 +3,99 @@
 @using Susmeter.DataAccess.DataStores
 @inject IPlayerDataStore _dataStore
 
-<h1>Players</h1>
-
 <div class="container-fluid">
-    @foreach (var player in players)
-    {
-        <div class="row">
-            <span>@player.Name</span>
-            <span>@player.Nickname</span>
+    <div class="row">
+        <div class="col-lg-4 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Among Us players</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Liers, cheats, degenerates</h6>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var player in players)
+                        {
+                        <li class="list-group-item">
+                            <div class="row" style="--avatar-color:@player.AvatarHexColor;" data-letters="@player.Name.First()">
+                                <div>
+                                    <div class="d-block">
+                                        <div class="small text-muted">@player.Name</div>
+                                        <div class="font-weight-bold">@player.Nickname</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <i class="fas fa-user-edit @(player == selectedPlayer ? "text-danger": string.Empty)" @onclick="(() => EditPlayer(player))"></i>
+                                </div>
+                            </div>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
         </div>
-    }
+        <div class="col-lg-3 col-md-12 ml-lg-2">
+            @if (showUpdateMsg)
+            {
+                <div class="alert alert-primary" role="alert">
+                    @updateMsg
+                </div>
+            }
+
+            @if (selectedPlayer != null)
+            {
+        <div class="card">
+            <div class="card-body">
+                <h5>Edit player info</h5>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" @bind="selectedPlayer.Name">
+                </div>
+                <div class="form-group">
+                    <label>Nickname</label>
+                    <input class="form-control" @bind="selectedPlayer.Nickname">
+                    <small class="form-text text-muted">Dont abuse this form!</small>
+                </div>
+                <button class="btn btn-primary" @onclick="(() => UpdatePlayer(selectedPlayer))">Update</button>
+            </div>
+        </div>            }
+        </div>
+    </div>
 </div>
 
 @code {
     private List<Player> players = new List<Player>();
+    private Player selectedPlayer;
+    private bool showUpdateMsg;
+    private string updateMsg;
 
     protected override async Task OnInitializedAsync()
     {
         players = await _dataStore.ListPlayersAsync(default);
+    }
+
+    private void EditPlayer(Player player)
+    {
+        if (selectedPlayer == player)
+        {
+            selectedPlayer = null;
+            return;
+        }
+
+        selectedPlayer = player;
+        showUpdateMsg = false;
+    }
+
+    private async Task UpdatePlayer(Player player)
+    {
+        try
+        {
+            await _dataStore.UpdatePlayerAsync(player, default);
+            updateMsg = "Player successfuly updated!";
+            showUpdateMsg = true;
+            await _dataStore.DetectAndSaveAsync(default);
+        }
+        catch(Exception ex)
+        {
+            updateMsg = ex.ToString();
+            showUpdateMsg = true;
+        }
     }
 }

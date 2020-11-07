@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Susmeter.Ef;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Susmeter.DataAccess.DataStores
 {
     public interface IDataStore
     {
-        Task<int> DetectAndSaveAsync();
+        Task<int> DetectAndSaveAsync(CancellationToken cancellationToken);
     }
 
     public abstract class DataStore : IDataStore
@@ -25,10 +26,10 @@ namespace Susmeter.DataAccess.DataStores
 
         protected ILogger Logger { get; private set; }
 
-        public async Task<int> DetectAndSaveAsync()
+        public async Task<int> DetectAndSaveAsync(CancellationToken cancellationToken)
         {
             Context.ChangeTracker.DetectChanges();
-            return await Context.SaveChangesAsync();
+            return await Context.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using Susmeter.Abstractions;
-using Susmeter.Abstractions.Infrastructure;
-using Susmeter.Ef;
-using Susmeter.Ef.Entities;
+﻿using Susmeter.Ef;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,14 +6,10 @@ namespace Susmeter.DataAccess.DataStores
 {
     public static class DataStoreExtensions
     {
-        public static async Task<ColorEntity> FindColorAsync(this SusmeterDbContext context, Color color, CancellationToken cancellationToken)
+        public static async ValueTask<TEntity> FindEntityAsync<TEntity>(this SusmeterDbContext context, object key, CancellationToken cancellationToken)
+            where TEntity : class
         {
-           return await context.FindColorAsync(color.HexValue(), cancellationToken);
-        }
-
-        public static async Task<ColorEntity> FindColorAsync(this SusmeterDbContext context, string color, CancellationToken cancellationToken)
-        {
-            return await context.FindAsync<ColorEntity>(color, cancellationToken);
+            return await context.Set<TEntity>().FindAsync(new object[] { key }, cancellationToken);
         }
     }
 }
