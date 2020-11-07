@@ -7,3 +7,4 @@
 /src/Susmeter.Ef/bin/*
 /src/Susmeter.Ef/obj/*
 /.vs/*
+/src/Susmeter.Blazor/wwwroot/preview.html
