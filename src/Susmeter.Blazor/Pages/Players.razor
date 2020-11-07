@@ -1,0 +1,25 @@
+﻿@page "/players"
+@using Susmeter.Abstractions.Models
+@using Susmeter.DataAccess.DataStores
+@inject IPlayerDataStore _dataStore
+
+<h1>Players</h1>
+
+<div class="container-fluid">
+    @foreach (var player in players)
+    {
+        <div class="row">
+            <span>@player.Name</span>
+            <span>@player.Nickname</span>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Player> players = new List<Player>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        players = await _dataStore.ListPlayersAsync(default);
+    }
+}
