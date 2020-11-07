@@ -6,3 +6,4 @@
 /src/Susmeter.DataAccess/obj/*
 /src/Susmeter.Ef/bin/*
 /src/Susmeter.Ef/obj/*
+/.vs/*
