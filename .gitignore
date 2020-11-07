@@ -1,0 +1,8 @@
+/src/Susmeter.Abstractions/bin/*
+/src/Susmeter.Abstractions/obj/*
+/src/Susmeter.Blazor/bin/*
+/src/Susmeter.Blazor/obj/*
+/src/Susmeter.DataAccess/bin/*
+/src/Susmeter.DataAccess/obj/*
+/src/Susmeter.Ef/bin/*
+/src/Susmeter.Ef/obj/*
