@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Susmeter.DataAccess;
-using RazorComponentsPreview;
 
 namespace Susmeter.Blazor
 {
@@ -23,7 +22,6 @@ namespace Susmeter.Blazor
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddRazorComponentsRuntimeCompilation();
 
             services.AddLogging();
             services.AddDataAccess(Configuration);
@@ -43,7 +41,6 @@ namespace Susmeter.Blazor
                 app.UseHsts();
             }
 
-            app.UseRazorComponentsRuntimeCompilation();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

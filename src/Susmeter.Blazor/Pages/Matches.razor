@@ -15,7 +15,7 @@
                     <div class="row form-group">
                         <div class="col">
                             <small>Player</small>
-                            <select @bind="@addMatchPlayer.PlayerId" class="custom-select">
+                            <select value="@addMatchPlayer.PlayerId" @onchange="((ChangeEventArgs e) => ChangeSelectedPerson(e))" class="custom-select">
                                 @foreach (var player in players.Where(i => !addMatch.Players.Any(j => i.PlayerId == j.PlayerId)))
                                 {
                                     <option value="@player.PlayerId">@player.Nickname</option>
@@ -93,7 +93,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5 col-md-12">
+        <div class="col-lg-6 col-md-12">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-list"></i> Matches</h5>
@@ -232,6 +232,20 @@
             PlayerId = availablePlayer.PlayerId,
             Color = color
         };
+    }
+
+    private void ChangeSelectedPerson(ChangeEventArgs e)
+    {
+        var availableColors = AvailableColors(colors);
+        long playerId = long.Parse(e.Value.ToString());
+
+        addMatchPlayer.PlayerId = playerId;
+        var playerInfo = players.Where(i => i.PlayerId == playerId).FirstOrDefault();
+
+        if (playerInfo == null)
+            return;
+
+        addMatchPlayer.Color = availableColors.Contains(playerInfo.AvatarColor) ? playerInfo.AvatarColor : availableColors.FirstOrDefault();
     }
 
     private IEnumerable<Color> AvailableColors(IEnumerable<Color> colors)

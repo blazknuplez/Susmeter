@@ -8,3 +8,5 @@
 /src/Susmeter.Ef/obj/*
 /.vs/*
 /src/Susmeter.Blazor/wwwroot/preview.html
+/src/Susmeter.Blazor/Properties/PublishProfiles/FolderProfile.pubxml
+/src/Susmeter.Blazor/Properties/PublishProfiles/FolderProfile.pubxml.user
