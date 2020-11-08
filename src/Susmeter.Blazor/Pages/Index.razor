@@ -1,10 +1,80 @@
 ﻿@page "/"
+@using Susmeter.Abstractions.Models
+@using Susmeter.Abstractions.Infrastructure
+@using Susmeter.DataAccess.DataStores
+@inject IStatsDataStore _statsStore
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-12">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h1 class="display-1 d-inline">
+                        <i class="fas fa-gamepad" style="color: rgba(255, 255, 255, 0.2)"></i>
+                        @totals.MatchesPlayed
+                    </h1>
+                    <h5 class="card-title d-inline">matches played</h5>
+                </div>
+            </div>
+        </div>
 
-<div class="container">
-   
+        <div class="col-lg-4 col-md-12">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h1 class="display-1 d-inline">
+                        <i class="fas @Role.Impostor.IconClass()" style="color: rgba(255, 255, 255, 0.2)"></i>
+                        @totals.ImpostorWins
+                    </h1>
+                    <h5 class="card-title d-inline">impostor wins</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h1 class="display-1 d-inline">
+                        <i class="fas @Role.Crewmate.IconClass()" style="color: rgba(255, 255, 255, 0.2)"></i>
+                        @totals.CrewmateWins
+                    </h1>
+                    <h5 class="card-title d-inline">crewmate wins</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-lg-4 col-md-12">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-trophy"></i> Sus list</h5>
+                    <ul class="list-group text-white list-group-flush"> 
+                        @if (!topImpostors.Any())
+                        {
+                            <small class="font-italic">Add matches to show statistics...</small>
+                        }
+
+                        @foreach (var impostor in topImpostors)
+                        {
+                            <li class="list-group-item border-light bg-warning font-weight-bold">
+                                <span>@impostor.Nickname</span><span class="float-right">@impostor.ImpostorGames</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
-@code {
+@code 
+{ 
+    private MatchStatTotals totals = new MatchStatTotals();
+    private List<TopImpostor> topImpostors = new List<TopImpostor>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        totals = await _statsStore.MatchStatTotalsAsync();
+        topImpostors = await _statsStore.ListTopImpostorsAsync();
+    }
 }

@@ -17,6 +17,7 @@ namespace Susmeter.DataAccess
 
             services.AddScoped<IPlayerDataStore, PlayerDataStore>();
             services.AddScoped<IMatchDataStore, MatchDataStore>();
+            services.AddScoped<IStatsDataStore, StatsDataStore>();
             services.AddAutoMapper(c => c.AddProfile<DbMappingProfile>());
 
             return services;

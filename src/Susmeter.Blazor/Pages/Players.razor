@@ -78,7 +78,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        players = await _dataStore.ListPlayersAsync(default);
+        players = await _dataStore.ListPlayersAsync();
     }
 
     private void EditPlayer(Player player)
@@ -97,10 +97,10 @@
     {
         try
         {
-            await _dataStore.UpdatePlayerAsync(player, default);
+            await _dataStore.UpdatePlayerAsync(player);
             updateMsg = "Player successfuly updated!";
             showUpdateMsg = true;
-            await _dataStore.DetectAndSaveAsync(default);
+            await _dataStore.DetectAndSaveAsync();
         }
         catch(Exception ex)
         {
