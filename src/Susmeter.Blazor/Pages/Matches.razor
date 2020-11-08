@@ -1,0 +1,232 @@
+﻿@page "/matches"
+@using Susmeter.Abstractions.Models
+@using Susmeter.Abstractions.Infrastructure
+@using Susmeter.DataAccess.DataStores
+@inject IMatchDataStore _matchStore
+@inject IPlayerDataStore _playerStore
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    <h5>Add match</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Add players to match</h6>
+                    <div class="row form-group">
+                        <div class="col">
+                            <small>Player</small>
+                            <select @bind="@addMatchPlayer.PlayerId" class="custom-select">
+                                @foreach (var player in players.Where(i => !addMatch.Players.Any(j => i.PlayerId == j.PlayerId)))
+                                {
+                                    <option value="@player.PlayerId">@player.Nickname</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col">
+                            <small>Color</small>
+                            <select @bind="@addMatchPlayer.Color" class="custom-select">
+                                @foreach (var color in EnumExtensions.GetEnumValues<Color>().Where(i => !addMatch.Players.Any(j => i == j.Color)))
+                                {
+                                    <option value="@color">@color</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col">
+                            <small>Role</small>
+                            <select @bind="@addMatchPlayer.PlayerRole" class="custom-select">
+                                @foreach (var role in EnumExtensions.GetEnumValues<Role>())
+                                {
+                                    <option value="@role">@role</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-secondary mt-4" @onclick="(() => AddPlayerToMatch(addMatchPlayer))">Add</button>
+                        </div>
+                    </div>
+                    <div>
+                        <ul class="list-group list-group-flush">
+                            @if (addMatch.Players.Count == 0)
+                            {
+                                <li class="list-group-item bg-dark text-white my-3 p-0">
+                                    <small class="font-italic">Add players for the current game...</small>
+                                </li>
+                            }
+
+                            @foreach (var player in addMatch.Players)
+                            {
+                            <li class="list-group-item bg-dark text-white" style="border-color: #495158;">
+                                <div class="row" style="--avatar-color:@player.HexColor;" sm-data-letters="@player.Nickname.First()">
+                                    <div @onclick="(() => ChangeColor(player))" class="col align-self-center">
+                                        <div class="font-weight-bold">@player.Nickname</div>
+                                    </div>
+                                    <div class="col align-self-center">
+                                        <span @onclick="(() => ChangePlayerRole(player))">
+                                            <i class="fas @player.PlayerRole.IconClass() mr-2"></i>@player.PlayerRole
+                                        </span>
+                                    </div>
+                                    <div class="align-self-center ml-auto">
+                                        <i class="fas fa-minus-circle text-secondary" @onclick="(() => RemovePlayer(player))"></i>
+                                    </div>
+                                </div>
+                            </li>
+                            }
+                        </ul>
+                   </div>
+                    <div class="row form-group">
+                        <div class="col">
+                            <small>Who won?</small>
+                            <select @bind="@addMatch.Winner" class="custom-select">
+                            @foreach (var role in EnumExtensions.GetEnumValues<Role>())
+                            {
+                                <option value="@role">@($"{role}s")</option>
+                            }
+                            </select>
+                        </div>
+                        <div class="col"></div>
+                        <div class="col"></div>
+                        <div class="col-1"></div>
+                    </div>
+                    <div>
+                        <button @onclick="(() => AddMatch(addMatch))" class="btn btn-secondary">Add match</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-list"></i> Matches</h5>
+                    @if (!matches.Any())
+                    {
+                        <small class="font-italic">No matches found...</small>
+                    }
+
+                    @if (matches.Any())
+                    {
+                <table class="table table-sm font-weight-light" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans' , sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji' , 'Segoe UI Symbol' , 'Noto Color Emoji';">
+                    <thead>
+                        <tr>
+                            <th class="font-weight-lighter" scope="col">Date</th>
+                            <th class="font-weight-lighter" scope="col">Impostors</th>
+                            <th class="font-weight-lighter" scope="col">Crewmates</th>
+                            <th class="font-weight-lighter text-center" scope="col">Winner</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var match in matches.OrderByDescending(i => i.Timestamp))
+                            {
+                        <tr>
+                            <td>@match.Timestamp.ToShortDateString()</td>
+                            <td>
+                                @foreach (var player in match.Players.Where(i => i.PlayerRole == Role.Impostor))
+                                {
+                                    <span class="badge text-white font-weight-lighter mr-1" style="background-color: @player.HexColor; font-size: 0.8rem;">@player.Nickname</span>
+                                }
+                            </td>
+                            <td>
+                                @foreach (var player in match.Players.Where(i => i.PlayerRole == Role.Crewmate))
+                                {
+                                    <span class="badge text-white font-weight-lighter  mr-1" style="background-color: @player.HexColor; font-size: 0.8rem;">@player.Nickname</span>
+                                }
+                            </td>
+                            <td class="text-center"><i class="fas @match.Winner.IconClass()"></i></td>
+                        </tr>
+                            }
+                    </tbody>
+                </table>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Match> matches = new List<Match>();
+    private List<Player> players = new List<Player>();
+    private Match addMatch = new Match();
+    private MatchPlayer addMatchPlayer = new MatchPlayer();
+    private IEnumerable<Color> colors = EnumExtensions.GetEnumValues<Color>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        matches = await _matchStore.ListMatchesAsync();
+        players = await _playerStore.ListPlayersAsync();
+
+        addMatchPlayer = FindDefaultPlayer();
+    }
+
+    private async Task AddMatch(Match match)
+    {
+        if (!match.Players.Any())
+            return;
+
+        var newMatch = match.Clone(w => w.Timestamp = DateTime.Now);
+        await _matchStore.AddMatchAsync(newMatch);
+        await _matchStore.DetectAndSaveAsync();
+
+        matches.Add(newMatch);
+    }
+
+    private void AddPlayerToMatch(MatchPlayer player)
+    {
+        var playerInfo = players.FirstOrDefault(i => i.PlayerId == player.PlayerId);
+
+        if (playerInfo == null)
+            return;
+
+        var matchPlayer = player.Clone(w =>
+        {
+            w.Name = playerInfo.Name;
+            w.Nickname = playerInfo.Nickname;
+        });
+
+        addMatch.Players.Add(matchPlayer);
+        addMatchPlayer = FindDefaultPlayer();
+    }
+
+    private void ChangePlayerRole(MatchPlayer player)
+    {
+        player.PlayerRole = player.PlayerRole == Role.Crewmate ? Role.Impostor : Role.Crewmate;
+    }
+
+    private void RemovePlayer(MatchPlayer player)
+    {
+        addMatch.Players.Remove(player);
+    }
+
+    private void ChangeColor(MatchPlayer player)
+    {
+        var allColors = colors.ToList();
+        var index = allColors.IndexOf(player.Color);
+        var availableColors = AvailableColors(colors);
+        var tempColor = allColors[++index % allColors.Count];
+
+        while (!availableColors.Contains(tempColor))
+        {
+            tempColor = allColors[++index % allColors.Count];
+        }
+
+        player.Color = tempColor;
+        addMatchPlayer = FindDefaultPlayer();
+    }
+
+    private MatchPlayer FindDefaultPlayer()
+    {
+        if (players.Count == addMatch.Players.Count)
+            return new MatchPlayer();
+
+        return new MatchPlayer
+        {
+            PlayerId = players.Where(i => !addMatch.Players.Any(j => i.PlayerId == j.PlayerId)).FirstOrDefault().PlayerId,
+            Color = AvailableColors(colors).FirstOrDefault()
+        };
+    }
+
+    private IEnumerable<Color> AvailableColors(IEnumerable<Color> colors)
+    {
+        return colors.Where(i => !addMatch.Players.Any(j => i == j.Color));
+    }
+}

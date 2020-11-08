@@ -16,7 +16,7 @@ namespace Susmeter.Abstractions.Models
         {
             get
             {
-                return AvatarHexColor.ParseEnum<Color>();
+                return AvatarHexColor?.ParseEnum<Color>() ?? default(Color);
             }
             set
             {

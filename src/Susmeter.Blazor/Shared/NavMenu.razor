@@ -1,20 +1,28 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Susmeter</a>
+    <a class="navbar-brand" href="">
+        <img src="/img/body.png" asp-append-version="true" style="width: 3rem" />
+        Susmeter
+    </a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
-
+<hr class="my-0" style="background-color: #495158;" />
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> <i class="fas fa-chart-pie mr-2"></i> Statistics
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="matches">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> <i class="fas fa-gamepad mr-2"></i> Matches
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="players">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Players
+                <span class="oi oi-list-rich" aria-hidden="true"></span> <i class="fas fa-users mr-2"></i> Players
             </NavLink>
         </li>
     </ul>

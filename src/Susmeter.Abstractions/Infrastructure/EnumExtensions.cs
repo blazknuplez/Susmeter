@@ -1,5 +1,4 @@
-﻿using Susmeter.Abstractions.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,6 +29,13 @@ namespace Susmeter.Abstractions.Infrastructure
         {
             HexValueAttribute attribute = GetAttribute<TEnum, HexValueAttribute>(enumVal);
             return attribute.HexValue;
+        }
+
+        public static string IconClass<TEnum>(this TEnum enumVal)
+            where TEnum : Enum
+        {
+            IconAttribute attribute = GetAttribute<TEnum, IconAttribute>(enumVal);
+            return attribute.IconClass;
         }
 
         public static IEnumerable<TEnum> GetEnumValues<TEnum>()

@@ -16,13 +16,13 @@ namespace Susmeter.DataAccess.DataStores
 {
     public interface IPlayerDataStore : IDataStore
     {
-        Task<PlayerEntity> AddPlayerAsync(string name, string nickname, Color color, CancellationToken cancellationToken);
+        Task<PlayerEntity> AddPlayerAsync(string name, string nickname, Color color, CancellationToken cancellationToken = default);
 
-        Task<List<Player>> ListPlayersAsync(CancellationToken cancellationToken);
+        Task<List<Player>> ListPlayersAsync(CancellationToken cancellationToken = default);
 
-        Task<Player> FindPlayerAsync(long playerId, CancellationToken cancellationToken);
+        Task<Player> FindPlayerAsync(long playerId, CancellationToken cancellationToken = default);
 
-        Task UpdatePlayerAsync(Player player, CancellationToken cancellationToken);
+        Task UpdatePlayerAsync(Player player, CancellationToken cancellationToken = default);
     }
 
     public class PlayerDataStore : DataStore, IPlayerDataStore
@@ -32,7 +32,7 @@ namespace Susmeter.DataAccess.DataStores
         {
         }
 
-        public async Task<PlayerEntity> AddPlayerAsync(string name, string nickname, Color color, CancellationToken cancellationToken)
+        public async Task<PlayerEntity> AddPlayerAsync(string name, string nickname, Color color, CancellationToken cancellationToken = default)
         {
             var colorEntity = await Context.FindEntityAsync<ColorEntity>(color.HexValue(), cancellationToken);
             var entity = new PlayerEntity { Name = name, Nickname = nickname, AvatarColor = colorEntity };
@@ -41,7 +41,7 @@ namespace Susmeter.DataAccess.DataStores
             return entity;
         }
 
-        public async Task<List<Player>> ListPlayersAsync(CancellationToken cancellationToken)
+        public async Task<List<Player>> ListPlayersAsync(CancellationToken cancellationToken = default)
         {
             return await Context.Set<PlayerEntity>()
                 .ProjectTo<Player>(Mapper)
@@ -49,7 +49,7 @@ namespace Susmeter.DataAccess.DataStores
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Player> FindPlayerAsync(long playerId, CancellationToken cancellationToken)
+        public async Task<Player> FindPlayerAsync(long playerId, CancellationToken cancellationToken = default)
         {
             return await Context.Set<PlayerEntity>()
                 .Where(i => i.PlayerId == playerId)
@@ -57,7 +57,7 @@ namespace Susmeter.DataAccess.DataStores
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task UpdatePlayerAsync(Player player, CancellationToken cancellationToken)
+        public async Task UpdatePlayerAsync(Player player, CancellationToken cancellationToken = default)
         {
             var entity = await Context.FindEntityAsync<PlayerEntity>(player.PlayerId, cancellationToken);
             var colorEntity = await Context.FindEntityAsync<ColorEntity>(player.AvatarHexColor, cancellationToken);

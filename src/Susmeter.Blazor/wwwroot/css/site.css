@@ -13,6 +13,21 @@
     color: white;
 }
 
+[sm-data-letters]:before {
+    content: attr(data-letters);
+    display: inline-block;
+    font-size: 1em;
+    width: 1.3em;
+    height: 1.3em;
+    line-height: 1em;
+    text-align: center;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    background: var(--avatar-color);
+    color: white;
+}
+
 app {
     position: relative;
     display: flex;
@@ -46,26 +61,19 @@ app {
 }
 
 .sidebar {
-    background-color: rgba(0,0,0,1);
+    background-color: #343a40;
 }
 
     .sidebar .top-row {
-        background-color: rgba(0,0,0,1);
+        background-color: #343a40;
     }
 
     .sidebar .navbar-brand {
-        font-size: 1.1rem;
-    }
-
-    .sidebar .oi {
-        width: 2rem;
-        font-size: 1.1rem;
-        vertical-align: text-top;
-        top: -2px;
+        font-size: 1.5rem;
     }
 
     .sidebar .nav-item {
-        font-size: 0.9rem;
+        font-size: 1rem;
         padding-bottom: 0.5rem;
     }
 
@@ -87,8 +95,8 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
-                color: white;
+                background-color: #EBECEC;
+                color: #333d48;
             }
 
             .sidebar .nav-item a:hover {

@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Susmeter.Blazor.Data;
-using Microsoft.EntityFrameworkCore;
 using Susmeter.DataAccess;
 using RazorComponentsPreview;
 
@@ -26,9 +24,6 @@ namespace Susmeter.Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddRazorComponentsRuntimeCompilation();
-
-
-            services.AddSingleton<WeatherForecastService>();
 
             services.AddLogging();
             services.AddDataAccess(Configuration);

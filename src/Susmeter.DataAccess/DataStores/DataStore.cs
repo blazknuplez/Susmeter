@@ -8,7 +8,7 @@ namespace Susmeter.DataAccess.DataStores
 {
     public interface IDataStore
     {
-        Task<int> DetectAndSaveAsync(CancellationToken cancellationToken);
+        Task<int> DetectAndSaveAsync(CancellationToken cancellationToken = default);
     }
 
     public abstract class DataStore : IDataStore
@@ -26,7 +26,7 @@ namespace Susmeter.DataAccess.DataStores
 
         protected ILogger Logger { get; private set; }
 
-        public async Task<int> DetectAndSaveAsync(CancellationToken cancellationToken)
+        public async Task<int> DetectAndSaveAsync(CancellationToken cancellationToken = default)
         {
             Context.ChangeTracker.DetectChanges();
             return await Context.SaveChangesAsync(cancellationToken);

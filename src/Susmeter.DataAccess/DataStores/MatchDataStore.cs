@@ -14,11 +14,11 @@ namespace Susmeter.DataAccess.DataStores
 {
     public interface IMatchDataStore : IDataStore
     {
-        Task<MatchEntity> AddMatchAsync(Match match, CancellationToken cancellationToken);
+        Task<MatchEntity> AddMatchAsync(Match match, CancellationToken cancellationToken = default);
 
-        Task<List<Match>> ListMatchesAsync(CancellationToken cancellationToken);
+        Task<List<Match>> ListMatchesAsync(CancellationToken cancellationToken = default);
 
-        Task<Match> FindMatchAsync(long matchId, CancellationToken cancellationToken);
+        Task<Match> FindMatchAsync(long matchId, CancellationToken cancellationToken = default);
     }
 
     public class MatchDataStore : DataStore, IMatchDataStore
@@ -28,7 +28,7 @@ namespace Susmeter.DataAccess.DataStores
         {
         }
 
-        public async Task<MatchEntity> AddMatchAsync(Match match, CancellationToken cancellationToken)
+        public async Task<MatchEntity> AddMatchAsync(Match match, CancellationToken cancellationToken = default)
         {
             var entity = new MatchEntity { Timestamp = match.Timestamp, Winner = match.Winner };
             match.Players.ForEach(async p => await AddPlayerToMatch(entity, p, cancellationToken));
@@ -36,14 +36,14 @@ namespace Susmeter.DataAccess.DataStores
             return entity;
         }
 
-        public async Task<List<Match>> ListMatchesAsync(CancellationToken cancellationToken)
+        public async Task<List<Match>> ListMatchesAsync(CancellationToken cancellationToken = default)
         {
             return await Context.Set<MatchEntity>()
                 .ProjectTo<Match>(Mapper)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Match> FindMatchAsync(long matchId, CancellationToken cancellationToken)
+        public async Task<Match> FindMatchAsync(long matchId, CancellationToken cancellationToken = default)
         {
             return await Context.Set<MatchEntity>()
                 .Where(i => i.MatchId == matchId)
@@ -53,7 +53,7 @@ namespace Susmeter.DataAccess.DataStores
 
         private async Task AddPlayerToMatch(MatchEntity entity, MatchPlayer player, CancellationToken cancellationToken)
         {
-            var playerEntity = await Context.Set<PlayerEntity>().FindAsync(player.PlayerId, cancellationToken);
+            var playerEntity = await Context.FindEntityAsync<PlayerEntity>(player.PlayerId, cancellationToken);
             var colorEntity = await Context.FindEntityAsync<ColorEntity>(player.HexColor, cancellationToken);
 
             entity.Players.Add(new MatchPlayerEntity
