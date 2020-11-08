@@ -17,6 +17,9 @@ namespace Susmeter.Abstractions.Models
         [HexValue("#ED54BA")]
         Pink,
 
+        [HexValue("#EF7D0E")]
+        Orange,
+
         [HexValue("#F6F658")]
         Yellow,
 

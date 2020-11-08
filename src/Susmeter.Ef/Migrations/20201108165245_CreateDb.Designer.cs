@@ -9,7 +9,7 @@ using Susmeter.Ef;
 namespace Susmeter.Ef.Migrations
 {
     [DbContext(typeof(SusmeterDbContext))]
-    [Migration("20201107202943_CreateDb")]
+    [Migration("20201108165245_CreateDb")]
     partial class CreateDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,11 @@ namespace Susmeter.Ef.Migrations
                         {
                             HexCode = "#ED54BA",
                             ColorName = "Pink"
+                        },
+                        new
+                        {
+                            HexCode = "#EF7D0E",
+                            ColorName = "Orange"
                         },
                         new
                         {

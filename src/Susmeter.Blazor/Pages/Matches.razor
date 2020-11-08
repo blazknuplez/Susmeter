@@ -195,6 +195,7 @@
     private void RemovePlayer(MatchPlayer player)
     {
         addMatch.Players.Remove(player);
+        addMatchPlayer = FindDefaultPlayer();
     }
 
     private void ChangeColor(MatchPlayer player)
@@ -218,10 +219,18 @@
         if (players.Count == addMatch.Players.Count)
             return new MatchPlayer();
 
+        var availablePlayer = players.Where(i => !addMatch.Players.Any(j => i.PlayerId == j.PlayerId)).FirstOrDefault();
+
+        if (availablePlayer == null)
+            return new MatchPlayer();
+
+        var availableColors = AvailableColors(colors);
+        Color color = availableColors.Contains(availablePlayer.AvatarColor) ? availablePlayer.AvatarColor : availableColors.FirstOrDefault();
+
         return new MatchPlayer
         {
-            PlayerId = players.Where(i => !addMatch.Players.Any(j => i.PlayerId == j.PlayerId)).FirstOrDefault().PlayerId,
-            Color = AvailableColors(colors).FirstOrDefault()
+            PlayerId = availablePlayer.PlayerId,
+            Color = color
         };
     }
 

@@ -54,6 +54,11 @@ namespace Susmeter.Ef.Migrations
                         },
                         new
                         {
+                            HexCode = "#EF7D0E",
+                            ColorName = "Orange"
+                        },
+                        new
+                        {
                             HexCode = "#F6F658",
                             ColorName = "Yellow"
                         },

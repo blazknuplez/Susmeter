@@ -111,6 +111,11 @@ namespace Susmeter.Ef.Migrations
             migrationBuilder.InsertData(
                 table: "Color",
                 columns: new[] { "HexCode", "ColorName" },
+                values: new object[] { "#EF7D0E", "Orange" });
+
+            migrationBuilder.InsertData(
+                table: "Color",
+                columns: new[] { "HexCode", "ColorName" },
                 values: new object[] { "#F6F658", "Yellow" });
 
             migrationBuilder.InsertData(
