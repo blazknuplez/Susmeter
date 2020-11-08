@@ -8,7 +8,8 @@ namespace Susmeter.DataAccess.Infrastructure
     {
         public DbMappingProfile()
         {
-            CreateMap<PlayerEntity, Player>();
+            CreateMap<PlayerEntity, Player>()
+                .ForMember(d => d.AvatarColor, f => f.Ignore());
 
             CreateMap<MatchEntity, Match>()
                 .ForMember(d => d.Players, f => f.MapFrom(s => s.Players));

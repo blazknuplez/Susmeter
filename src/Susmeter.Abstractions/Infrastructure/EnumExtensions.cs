@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Susmeter.Abstractions.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace Susmeter.Abstractions.Infrastructure
 {
@@ -22,7 +22,7 @@ namespace Susmeter.Abstractions.Infrastructure
                 }
             }
 
-            throw new ArgumentException($"Could not parse {stringVal} to {typeof(Color).FullName}");
+            throw new ArgumentException($"Could not parse {stringVal} to {typeof(TEnum).FullName}");
         }
 
         public static string HexValue<TEnum>(this TEnum enumVal)

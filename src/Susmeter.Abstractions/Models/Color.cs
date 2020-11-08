@@ -1,7 +1,7 @@
 ﻿using Susmeter.Abstractions.Infrastructure;
 using System;
 
-namespace Susmeter.Abstractions
+namespace Susmeter.Abstractions.Models
 {
     public enum Color
     {

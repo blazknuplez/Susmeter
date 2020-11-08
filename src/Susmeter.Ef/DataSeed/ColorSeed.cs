@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Susmeter.Abstractions;
 using Susmeter.Abstractions.Infrastructure;
+using Susmeter.Abstractions.Models;
 using Susmeter.Ef.Entities;
 
 namespace Susmeter.Ef.DataSeed
