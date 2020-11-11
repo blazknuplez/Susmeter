@@ -46,7 +46,7 @@
         <div class="col-lg-4 col-md-12">
             <div class="card text-white bg-warning">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-trophy"></i> Sus list</h5>
+                    <h5 class="card-title"><i class="fas fa-trophy mr-2"></i>Sus list</h5>
                     <ul class="list-group text-white list-group-flush"> 
                         @if (!topImpostors.Any())
                         {
@@ -63,6 +63,48 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-4 col-md-12">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-book-dead mr-2"></i>Deadliest impostors</h5>
+                    <ul class="list-group text-white list-group-flush"> 
+                        @if (!deadliestImpostors.Any())
+                        {
+                            <small class="font-italic">Add matches to show statistics...</small>
+                        }
+
+                        @foreach (var impostor in deadliestImpostors)
+                        {
+                            <li class="list-group-item border-light bg-dark font-weight-bold">
+                                <span>@impostor.Nickname</span><span class="float-right">@impostor.WinPercent.ToString("0.00")%</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-brain mr-2"></i>5head crewmates</h5>
+                    <ul class="list-group text-white list-group-flush"> 
+                        @if (!deadliestImpostors.Any())
+                        {
+                            <small class="font-italic">Add matches to show statistics...</small>
+                        }
+
+                        @foreach (var crewmate in fiveHeadCrewmates)
+                        {
+                            <li class="list-group-item border-light bg-info font-weight-bold">
+                                <span>@crewmate.Nickname</span><span class="float-right">@crewmate.WinPercent.ToString("0.00")%</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -71,10 +113,14 @@
 { 
     private MatchStatTotals totals = new MatchStatTotals();
     private List<TopImpostor> topImpostors = new List<TopImpostor>();
+    private List<RoleStats> deadliestImpostors = new List<RoleStats>();
+    private List<RoleStats> fiveHeadCrewmates = new List<RoleStats>();
 
     protected override async Task OnInitializedAsync()
     {
         totals = await _statsStore.MatchStatTotalsAsync();
         topImpostors = await _statsStore.ListTopImpostorsAsync();
+        deadliestImpostors = await _statsStore.ListDeadliestImpostorAsync();
+        fiveHeadCrewmates = await _statsStore.List5HeadCrewmatesAsync();
     }
 }
