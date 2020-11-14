@@ -65,7 +65,7 @@
         </div>
 
         <div class="col-lg-4 col-md-12">
-            <div class="card bg-dark text-white">
+            <div class="card bg-danger text-white">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-book-dead mr-2"></i>Deadliest impostors</h5>
                     <ul class="list-group text-white list-group-flush"> 
@@ -76,7 +76,7 @@
 
                         @foreach (var impostor in deadliestImpostors)
                         {
-                            <li class="list-group-item border-light bg-dark font-weight-bold">
+                            <li class="list-group-item border-light bg-danger font-weight-bold">
                                 <span>@impostor.Nickname</span><span class="float-right">@impostor.WinPercent.ToString("0.00")%</span>
                             </li>
                         }
