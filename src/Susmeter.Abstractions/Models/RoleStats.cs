@@ -7,7 +7,5 @@
         public string Nickname { get; set; }
 
         public decimal WinPercent { get; set; }
-
-        public decimal LosePercent { get; set; }
     }
 }
