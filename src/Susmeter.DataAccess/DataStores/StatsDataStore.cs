@@ -47,6 +47,7 @@ namespace Susmeter.DataAccess.DataStores
             var data = await GetFlatDataForRole(Role.Impostor, cancellationToken);
 
             return data.GroupBy(i => new { i.PlayerId, i.Nickname })
+                .Where(i => i.Count() > 20)
                 .Select(i => new TopImpostor
                 {
                     PlayerId = i.Key.PlayerId,
@@ -82,6 +83,7 @@ namespace Susmeter.DataAccess.DataStores
         {
             // todo check why LINQ to Entities fails for this for SQLite db
             return data.GroupBy(i => new { i.PlayerId, i.Nickname })
+                .Where(i => i.Count() > 20)
                 .Select(i => new RoleStats
                 {
                     PlayerId = i.Key.PlayerId,

@@ -116,8 +116,8 @@
                     <tbody>
                         @foreach (var match in matches.OrderByDescending(i => i.Timestamp))
                             {
-                        <tr>
-                            <td>@match.Timestamp.ToShortDateString()</td>
+                        <tr title="@match.MatchId">
+                            <td>@match.Timestamp.ToString("dd.MM.yyyy")</td>
                             <td>
                                 @foreach (var player in match.Players.Where(i => i.PlayerRole == Role.Impostor))
                                 {
