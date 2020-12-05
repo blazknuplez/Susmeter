@@ -21,6 +21,8 @@ namespace Susmeter.DataAccess.DataStores
         Task<List<RoleStats>> ListDeadliestImpostorAsync(CancellationToken cancellationToken = default);
 
         Task<List<RoleStats>> List5HeadCrewmatesAsync(CancellationToken cancellationToken = default);
+
+        Task<List<RoleStats>> ListWorstImpostorAsync(CancellationToken cancellationToken = default);
     }
 
     public class StatsDataStore : DataStore, IStatsDataStore
@@ -71,6 +73,12 @@ namespace Susmeter.DataAccess.DataStores
             return GroupByStatsForWinningRole(data, Role.Crewmate);
         }
 
+        public async Task<List<RoleStats>> ListWorstImpostorAsync(CancellationToken cancellationToken = default)
+        {
+            var data = await GetFlatDataForRole(Role.Impostor, cancellationToken);
+            return GroupByStatsForLosingRole(data, Role.Impostor);
+        }
+
         private async Task<List<RoleStatsQuery>> GetFlatDataForRole(Role playerRole, CancellationToken cancellationToken)
         {
             return await Context.Set<MatchPlayerEntity>()
@@ -91,6 +99,20 @@ namespace Susmeter.DataAccess.DataStores
                     WinPercent = (decimal)i.Count(j => j.WinningRole == playerRole) / i.Count() * 100
                 })
                 .OrderByDescending(i => i.WinPercent)
+                .Take(3)
+                .ToList();
+        }
+        private List<RoleStats> GroupByStatsForLosingRole(List<RoleStatsQuery> data, Role playerRole)
+        {
+            // todo check why LINQ to Entities fails for this for SQLite db
+            return data.GroupBy(i => new { i.PlayerId, i.Nickname })
+                .Select(i => new RoleStats
+                {
+                    PlayerId = i.Key.PlayerId,
+                    Nickname = i.Key.Nickname,
+                    LosePercent = (decimal)i.Count(j => j.WinningRole == playerRole) / i.Count() * 100
+                })
+                .OrderBy(i => i.LosePercent)
                 .Take(3)
                 .ToList();
         }
