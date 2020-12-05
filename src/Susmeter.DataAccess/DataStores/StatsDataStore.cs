@@ -16,13 +16,13 @@ namespace Susmeter.DataAccess.DataStores
     {
         Task<MatchStatTotals> MatchStatTotalsAsync(CancellationToken cancellationToken = default);
 
-        Task<List<TopImpostor>> ListTopImpostorsAsync(CancellationToken cancellationToken = default);
+        Task<List<TopImpostor>> ListTopImpostorsAsync(Filter filter, CancellationToken cancellationToken = default);
 
-        Task<List<RoleStats>> ListDeadliestImpostorAsync(CancellationToken cancellationToken = default);
+        Task<List<RoleStats>> ListDeadliestImpostorAsync(Filter filter, CancellationToken cancellationToken = default);
 
-        Task<List<RoleStats>> List5HeadCrewmatesAsync(CancellationToken cancellationToken = default);
+        Task<List<RoleStats>> List5HeadCrewmatesAsync(Filter filter, CancellationToken cancellationToken = default);
 
-        Task<List<RoleStats>> ListWorstImpostorAsync(CancellationToken cancellationToken = default);
+        Task<List<RoleStats>> ListWorstImpostorAsync(Filter filter, CancellationToken cancellationToken = default);
     }
 
     public class StatsDataStore : DataStore, IStatsDataStore
@@ -44,9 +44,9 @@ namespace Susmeter.DataAccess.DataStores
             };
         }
 
-        public async Task<List<TopImpostor>> ListTopImpostorsAsync(CancellationToken cancellationToken = default)
+        public async Task<List<TopImpostor>> ListTopImpostorsAsync(Filter filter, CancellationToken cancellationToken = default)
         {
-            var data = await GetFlatDataForRole(Role.Impostor, cancellationToken);
+            var data = await GetFlatDataForRole(Role.Impostor, filter, cancellationToken);
 
             return data.GroupBy(i => new { i.PlayerId, i.Nickname })
                 .Select(i => new TopImpostor
@@ -55,64 +55,48 @@ namespace Susmeter.DataAccess.DataStores
                     Nickname = i.Key.Nickname,
                     ImpostorGames = i.Count()
                 })
-                .OrderByDescending(i => i.ImpostorGames)
-                .Take(3)
-                .ToList();
+                .SortAndTake(i => i.ImpostorGames, filter);
         }
 
-        public async Task<List<RoleStats>> ListDeadliestImpostorAsync(CancellationToken cancellationToken = default)
+        public async Task<List<RoleStats>> ListDeadliestImpostorAsync(Filter filter, CancellationToken cancellationToken = default)
         {
-            var data = await GetFlatDataForRole(Role.Impostor, cancellationToken);
-            return GroupByStatsForWinningRole(data, Role.Impostor);
+            var data = await GetFlatDataForRole(Role.Impostor, filter, cancellationToken);
+            return GroupStatsForRole(data, Role.Impostor, filter);
         }
 
-        public async Task<List<RoleStats>> List5HeadCrewmatesAsync(CancellationToken cancellationToken = default)
+        public async Task<List<RoleStats>> List5HeadCrewmatesAsync(Filter filter, CancellationToken cancellationToken = default)
         {
-            var data = await GetFlatDataForRole(Role.Crewmate, cancellationToken);
-            return GroupByStatsForWinningRole(data, Role.Crewmate);
+            var data = await GetFlatDataForRole(Role.Crewmate, filter, cancellationToken);
+            return GroupStatsForRole(data, Role.Crewmate, filter);
         }
 
-        public async Task<List<RoleStats>> ListWorstImpostorAsync(CancellationToken cancellationToken = default)
+        public async Task<List<RoleStats>> ListWorstImpostorAsync(Filter filter, CancellationToken cancellationToken = default)
         {
-            var data = await GetFlatDataForRole(Role.Impostor, cancellationToken);
-            return GroupByStatsForLosingRole(data, Role.Impostor);
+            filter.SortOrder = SortOrder.Ascending;
+            var data = await GetFlatDataForRole(Role.Impostor, filter, cancellationToken);
+            return GroupStatsForRole(data, Role.Impostor, filter);
         }
 
-        private async Task<List<RoleStatsQuery>> GetFlatDataForRole(Role playerRole, CancellationToken cancellationToken)
+        private async Task<List<RoleStatsQuery>> GetFlatDataForRole(Role playerRole, Filter filter, CancellationToken cancellationToken)
         {
             return await Context.Set<MatchPlayerEntity>()
-                .Where(i => i.PlayerRole == playerRole)
+                .Where(i => i.PlayerRole == playerRole && i.Match.Timestamp >= filter.CutOffDate)
                 .Select(i => new RoleStatsQuery { PlayerId = i.PlayerId, Nickname = i.Player.Nickname, WinningRole = i.Match.Winner })
                 .ToListAsync(cancellationToken);
         }
 
-        private List<RoleStats> GroupByStatsForWinningRole(List<RoleStatsQuery> data, Role playerRole)
+        private List<RoleStats> GroupStatsForRole(List<RoleStatsQuery> data, Role playerRole, Filter filter)
         {
             // todo check why LINQ to Entities fails for this for SQLite db
             return data.GroupBy(i => new { i.PlayerId, i.Nickname })
+                .Where(i => i.Count() > filter.MinGames)
                 .Select(i => new RoleStats
                 {
                     PlayerId = i.Key.PlayerId,
                     Nickname = i.Key.Nickname,
                     WinPercent = (decimal)i.Count(j => j.WinningRole == playerRole) / i.Count() * 100
                 })
-                .OrderByDescending(i => i.WinPercent)
-                .Take(3)
-                .ToList();
-        }
-        private List<RoleStats> GroupByStatsForLosingRole(List<RoleStatsQuery> data, Role playerRole)
-        {
-            // todo check why LINQ to Entities fails for this for SQLite db
-            return data.GroupBy(i => new { i.PlayerId, i.Nickname })
-                .Select(i => new RoleStats
-                {
-                    PlayerId = i.Key.PlayerId,
-                    Nickname = i.Key.Nickname,
-                    LosePercent = (decimal)i.Count(j => j.WinningRole == playerRole) / i.Count() * 100
-                })
-                .OrderBy(i => i.LosePercent)
-                .Take(3)
-                .ToList();
+                .SortAndTake(i => i.WinPercent, filter);
         }
     }
 }

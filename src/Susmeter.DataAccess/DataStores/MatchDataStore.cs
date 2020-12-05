@@ -39,6 +39,8 @@ namespace Susmeter.DataAccess.DataStores
         public async Task<List<Match>> ListMatchesAsync(CancellationToken cancellationToken = default)
         {
             return await Context.Set<MatchEntity>()
+                .OrderByDescending(i => i.MatchId)
+                .Take(50)
                 .ProjectTo<Match>(Mapper)
                 .ToListAsync(cancellationToken);
         }
